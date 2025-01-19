@@ -1,16 +1,32 @@
 import pygame
-from model.BoardModel import BoardModel
-from pieces import *
+from model.BoardModel import BoardModel, Tile
+from model.MoveManager import MoveManager
+from model.pieces import *
+from model.constants import WHITE, BLACK
 
 # importer tous les models ici, pour qu'ils soient disponibles dasn le controller (centralise)
 class AppModel :
     def __init__(self) -> None:
-        self.game_is_running = False
+        self.game_is_running = True
         self.sprites = pygame.sprite.Group()
-        self.board = BoardModel() 
-        
+        self.board = BoardModel()
+        self.load_game()
+       
         print("Game initialized")
         
+    def load_game(self):
+        self.over = False
+        self.captured_piece = False
+        self.last_piece_killed = None
+        self.board.selected_tile = []
+        self.board.all_possible_tiles = []
+        self.sprites.empty()
+        self.register_pieces()
+        self.set_piece_tile()
+        self.active_piece = None
+        self.current_player = WHITE
+        self.move_manager = MoveManager()
+        print("Game loaded")
         
     def register_pieces(self):
         self.pieces = [
@@ -35,5 +51,44 @@ class AppModel :
             self.pieces.append(Pawn(320,0, (i,6), "white"))
             self.pieces.append(Pawn(320,64, (i,1), "black"))
             
-            
+    def set_piece_tile(self):
+        for piece in self.pieces:
+            piece : Piece
+            for tile in self.board.tiles :
+                tile : Tile
+                if not piece.pos == tile.coord :
+                    continue
+                else : 
+                    piece.rect.topleft = tile.rect.topleft
+                    self.sprites.add(piece)
+                    
+    def select_piece(self, pos):                   
+        if self.active_piece is None :   
+            for piece in self.pieces:
+                piece : Piece
+                if piece.rect.collidepoint(pos) and piece.color == self.current_player :    
+                    # à partir d'ici j'ai la main sur la pièce selectionnée
+                    self.active_piece = piece
+                    self.move_manager.set_active_piece(self.active_piece)
+                    self.board.selected_tile = piece.rect.copy()
+                    self.board.illegal_tile = None
+                    self.board.all_possible_tiles = None
+                    
+    # calculer ici l'état du plateau et 
+    # faire des observateurs pour détecter quand pièce déplacée et donc changement joueur
     
+    def drop_piece(self, pos) : 
+        if self.active_piece is None:
+            return
+        
+        for tile in self.board.tiles:
+            tile : Tile
+            if not tile.rect.collidepoint(pos):
+                continue  # Passez à la prochaine pos si pas collision
+            
+        # faire check legal move ici
+        
+            self.active_piece.move(tile.rect, pos)
+            self.active_piece = None
+        
+        

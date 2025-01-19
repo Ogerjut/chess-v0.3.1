@@ -4,6 +4,7 @@ import sys
 from model import AppModel
 from view import AppView
 from controller import AppController
+from model.constants import BLACK
 # from core import MainMenuState, OptionsState, PlayChessState
 
 SCREEN_SIZE = ((800,800))
@@ -39,6 +40,7 @@ class App:
 
     def run(self):
         while self.is_running:
+            self.screen.fill(BLACK)
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     self.exit()

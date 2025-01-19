@@ -7,7 +7,7 @@ class BoardView:
         self.screen = screen
         
         
-    def draw(self, board):
+    def draw(self, board : BoardModel):
         for y in range(BOARD_SIZE):
             for x in range(BOARD_SIZE):
                 rect = x*TILE_PIXEL + X_OFFSET, y*TILE_PIXEL + Y_OFFSET, TILE_PIXEL, TILE_PIXEL
@@ -15,7 +15,7 @@ class BoardView:
                 pygame.draw.rect(self.screen, color, rect)
                 self.draw_bordure(board)
 
-    def draw_bordure(self, board : BoardModel):
+    def draw_bordure(self, board : BoardModel ):
         for tile in board.tiles :
             tile : Tile
             rect = tile.rect

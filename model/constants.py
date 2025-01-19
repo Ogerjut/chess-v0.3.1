@@ -2,3 +2,6 @@
 BOARD_SIZE = 8
 TILE_PIXEL = 64 
 X_OFFSET, Y_OFFSET = 64, 128
+
+WHITE = "white"
+BLACK = "black"

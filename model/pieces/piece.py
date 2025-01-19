@@ -23,8 +23,8 @@ class Piece(Sprite) :
         self.rule_move = rule_move
         self.possible_moves = []
         
-    def move(self, rect : pygame.Rect, coord : pygame.Vector2):
-        self.pos = coord
+    def move(self, rect : pygame.Rect, coord : tuple ):
+        self.pos = pygame.Vector2(coord)
         self.rect.topleft = rect.topleft
         
     
